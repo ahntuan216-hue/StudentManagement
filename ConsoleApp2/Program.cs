@@ -1,0 +1,94 @@
+﻿using System;
+
+public class Student
+{
+    private string name;
+    private double score;
+    private static int totalStudents = 0;
+
+    public Student(string name, double score)
+    {
+        this.name = name;
+        this.score = score;
+        totalStudents++;
+    }
+
+    // Instance Methods
+    public string GetName() => name;
+
+    public double GetScore() => score;
+
+    public bool IsPassed() => score >= 5.0;
+
+    public string GetClassification()
+    {
+        if (score >= 8.0) return "Excellent";
+        if (score >= 6.5) return "Good";
+        if (score >= 5.0) return "Average";
+        return "Weak";
+    }
+
+    // Static Methods
+    public static int GetTotalStudents() => totalStudents;
+
+    public static Student FindTopStudent(Student[] students)
+    {
+        if (students == null || students.Length == 0) return null;
+
+        Student topStudent = students[0];
+        foreach (var student in students)
+        {
+            if (student.GetScore() > topStudent.GetScore())
+            {
+                topStudent = student;
+            }
+        }
+        return topStudent;
+    }
+
+    public static double CalculateAverageScore(Student[] students)
+    {
+        if (students == null || students.Length == 0) return 0.0;
+
+        double totalScore = 0;
+        foreach (var student in students)
+        {
+            totalScore += student.GetScore();
+        }
+        return totalScore / students.Length;
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // 1.Create an array of at least 5 Student objects
+        Student[] students = new Student[]
+        {
+            new Student("Bang Huynh Anh Tuan", 8.5),
+            new Student("Ton That Loc", 4.2),
+            new Student("Lai Dai Phuc", 6.8),
+            new Student("Ngo Dinh Phong", 9.1),
+            new Student("Kim Thai Binh", 5.5)
+        };
+
+        // 2.Print the total number of students created
+        Console.WriteLine($"Total students created: {Student.GetTotalStudents()}\n");
+
+        // 3.Print the list of students with classification and status
+        Console.WriteLine("--- Student List ---");
+        foreach (var student in students)
+        {
+            string status = student.IsPassed() ? "Passed" : "Failed";
+            Console.WriteLine($"Name: {student.GetName(),-8} | Score: {student.GetScore(),-4} | Grade: {student.GetClassification(),-9} | Status: {status}");
+        }
+
+        // 4. Print the top-scoring student
+        Student top = Student.FindTopStudent(students);
+        Console.WriteLine($"\nTop Student: {top.GetName()} with score {top.GetScore()}");
+
+        // 5.Print the class average score
+        Console.WriteLine($"Class Average Score: {Student.CalculateAverageScore(students):F2}");
+    }
+}
